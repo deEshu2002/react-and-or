@@ -1,0 +1,27 @@
+.flex{
+  display: flex;
+  flex-direction: row;
+  max-height: fit-content;
+  gap: .5rem;
+}
+
+.flex-col{
+  flex-direction: column;
+}
+
+.fit-content{
+  width: fit-content;
+}
+
+p{
+  margin-block: 0;
+}
+
+button{
+  width: fit-content;
+  height: fit-content;
+}
+
+.ml-1{
+  margin-left: 1rem;
+}
