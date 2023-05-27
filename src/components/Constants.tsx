@@ -8,6 +8,7 @@ export interface ConstantProps{
   argValue: argValuesTypes[],
   globalResult: string,
   setGlobalResult: React.Dispatch<React.SetStateAction<string>>
+  constantType: "and"| "or",
 }
 
 type allowedResult = argValuesTypes | "";
@@ -16,19 +17,19 @@ export type myResultType = allowedResult[]
 export default function Constants(props: ConstantProps) {
 
   const [resultArray, setResultArray] = useState<myResultType>(["", ""]);
-  const [andOr, setAndOr] = useState<"and" | "or">("and");
+  const [andOr, setAndOr] = useState<"and" | "or">(props.constantType);
   
   useEffect(() => {
     if(andOr === 'and'){
       const ans = reduceBooleanStringArray(resultArray, "and");
       props.setGlobalResult(ans)
     }
-    if(andOr === 'and'){
+    if(andOr === 'or'){
       const ans = reduceBooleanStringArray(resultArray, "or");
       props.setGlobalResult(ans)
     }
+  },[resultArray, andOr])
 
-  },[resultArray])
   function appendOperations(){
     resultArray.push("")
     setResultArray([...resultArray]);
@@ -37,13 +38,13 @@ export default function Constants(props: ConstantProps) {
   return (
     <div className='flex flex-col'>
     <select onChange={(e) => setAndOr(e.target.value as "and" | "or")}>
-      <option value={"and"}>and</option>
-      <option value={"or"}>or</option>
+      <option value={props.constantType}>{props.constantType}</option>
+      <option value={props.constantType === 'and'?'or':'and'}>{props.constantType === 'and'?'or':'and'}</option>
     </select>
     <div className='ml-1'>
       {
         resultArray.map((_, idx) => {
-          return <div key={idx} ><App index={idx} globalResult={resultArray} setGlobalResult={setResultArray} globalArgument={props.argument} globalArgValue={props.argValue}/></div>
+          return <div key={idx} ><App index={idx} setGlobalResult={setResultArray} globalArgument={props.argument} globalArgValue={props.argValue}/></div>
         })
       }
       <button type='button' onClick={() => appendOperations()}>+ opr</button>
@@ -54,7 +55,6 @@ export default function Constants(props: ConstantProps) {
 }
 
 export interface PropsConstantCollapseToSelect{
-  vals:argValuesTypes[],
   setResult:React.Dispatch<React.SetStateAction<string>>
 }
 

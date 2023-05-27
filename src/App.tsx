@@ -9,28 +9,21 @@ export type argValuesTypes = "true" | "false";
 
 export interface AppProps{
   index?:number
-  globalResult?: myResultType,
   setGlobalResult?: React.Dispatch<React.SetStateAction<myResultType>>,
   globalArgument?: string[]
   globalArgValue?: argValuesTypes[]
 }
 
-function App({index, globalResult, setGlobalResult, globalArgument=["newArg"], globalArgValue=["false"]}:AppProps) {
+function App({index, setGlobalResult, globalArgument, globalArgValue}:AppProps) {
 
   const [selectedOption, setSelectedOption] = useState<possibleOperation>("select")
   const [result, setResult] = useState<string>("");
 
-  const [argument, setArgument] = useState<string[]>(globalArgument);
-  const [argValue, setArgValue] = useState<argValuesTypes[]>(globalArgValue);
+  const [argument, setArgument] = useState<string[]>(globalArgument || ["newArg"]);
+  const [argValue, setArgValue] = useState<argValuesTypes[]>(globalArgValue || ["false"]);
   
   useEffect(() => {
-  //   if(operationName === 'and' && typeof setGlobalResult === 'function' && globalResult.length > 1){
-  //     setGlobalResult(stringBooleanOperation(result, globalResult, 'and'))
-  //   }else if(operationName === 'or' && typeof setGlobalResult === 'function' && globalResult.length > 1){
-  //     setGlobalResult(stringBooleanOperation(result, globalResult, 'or'))
-  //   }
-  //   console.log(result)
-    if(globalResult && setGlobalResult && index){
+    if(setGlobalResult && globalArgValue && typeof index === 'number'){
       globalArgValue[index] = result as argValuesTypes;
       setGlobalResult([...globalArgValue]);
     }
@@ -44,16 +37,17 @@ function App({index, globalResult, setGlobalResult, globalArgument=["newArg"], g
   return (
     <>
     <div className='flex flex-col fit-content'>
-      {!globalResult && <Arguments argument={argument} setArgument={setArgument} argValue={argValue} setArgValue={setArgValue}/>}
+      {!globalArgument && <Arguments argument={argument} setArgument={setArgument} argValue={argValue} setArgValue={setArgValue}/>}
       <div className='flex'>
       {(selectedOption === 'select') && <Operations setSelectedOption={setSelectedOption}/>}
-      {(selectedOption === 'constant') && <ConstantCollapseToSelect vals={argValue} setResult={setResult}/>}
+      {(selectedOption === 'constant') && <ConstantCollapseToSelect setResult={setResult}/>}
       {(selectedOption === 'argument') && <ArgumentCollapseIntoSelect args={argument} vals={argValue} setResult={setResult}/>}
-      {(selectedOption === 'and' || selectedOption === 'or' ) && <Constants argument={argument} argValue={argValue} globalResult={result} setGlobalResult={setResult}/>}
+      {(selectedOption === 'and' ) && <Constants constantType={"and"} argument={argument} argValue={argValue} globalResult={result} setGlobalResult={setResult}/>}
+      {( selectedOption === 'or') && <Constants constantType={"or"} argument={argument} argValue={argValue} globalResult={result} setGlobalResult={setResult}/>}
       <button type='button' onClick={() =>removeSelectedOption()}>x</button>
       </div>
     </div>
-    {!globalResult && <p>result:{result}</p>}
+    {!globalArgument && <p>result:{result}</p>}
     </>
   )
 }
