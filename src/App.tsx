@@ -9,23 +9,24 @@ export type argValuesTypes = "true" | "false";
 
 export interface AppProps{
   index?:number
+  globalResult? : myResultType,
   setGlobalResult?: React.Dispatch<React.SetStateAction<myResultType>>,
   globalArgument?: string[]
   globalArgValue?: argValuesTypes[]
 }
 
-function App({index, setGlobalResult, globalArgument, globalArgValue}:AppProps) {
+function App({index, globalResult, setGlobalResult, globalArgument, globalArgValue}:AppProps) {
 
   const [selectedOption, setSelectedOption] = useState<possibleOperation>("select")
   const [result, setResult] = useState<string>("");
 
-  const [argument, setArgument] = useState<string[]>(globalArgument || ["newArg"]);
-  const [argValue, setArgValue] = useState<argValuesTypes[]>(globalArgValue || ["false"]);
-  
+  const [argument, setArgument] = useState<string[]>(globalArgument ?? ["newArg"]);
+  const [argValue, setArgValue] = useState<argValuesTypes[]>(globalArgValue ?? ["false"]);
+
   useEffect(() => {
-    if(setGlobalResult && globalArgValue && typeof index === 'number'){
-      globalArgValue[index] = result as argValuesTypes;
-      setGlobalResult([...globalArgValue]);
+    if(globalResult && setGlobalResult && globalArgValue && typeof index === 'number'){
+      globalResult[index] = result as argValuesTypes;
+      setGlobalResult([...globalResult]);
     }
   }, [result])
 

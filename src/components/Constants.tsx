@@ -18,7 +18,7 @@ export default function Constants(props: ConstantProps) {
 
   const [resultArray, setResultArray] = useState<myResultType>(["", ""]);
   const [andOr, setAndOr] = useState<"and" | "or">(props.constantType);
-  
+
   useEffect(() => {
     if(andOr === 'and'){
       const ans = reduceBooleanStringArray(resultArray, "and");
@@ -44,7 +44,7 @@ export default function Constants(props: ConstantProps) {
     <div className='ml-1'>
       {
         resultArray.map((_, idx) => {
-          return <div key={idx} ><App index={idx} setGlobalResult={setResultArray} globalArgument={props.argument} globalArgValue={props.argValue}/></div>
+          return <div key={idx} ><App index={idx} globalResult={resultArray} setGlobalResult={setResultArray} globalArgument={props.argument} globalArgValue={props.argValue}/></div>
         })
       }
       <button type='button' onClick={() => appendOperations()}>+ opr</button>
